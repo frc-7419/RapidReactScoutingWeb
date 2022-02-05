@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	</head>
+	<body>
+		<header>
+			<nav class="header">
+				<img width=40 src="{{ url_for('static', filename='images/7419_light.png') }}"
+			</nav>
+		</header>
+		<section class="content">
+			{% block content %}{% endblock %}
+		</section>
+	</body>
+</html>

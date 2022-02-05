@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+<!-- macros -->
+
+{% macro build_input(entry) %}
+	<label for="{{ entry.id }}">{{ entry.name }}</label>
+	<input type="{{ entry.options['type'] }}" id="{{ entry.id }}" name="{{ entry.id }}">
+{% endmacro %}
+
+{% macro build_dropdown(entry) %}
+	<p>{{ entry.name }}</p>
+{% endmacro %}
+
+{% macro build_stepper(entry) %}
+	<label for="{{ entry.id }}">{{ entry.name }}</label>
+	<div class="stepper_container">
+		<button type="button" class="stepper_button stepper_button_minus" onclick="decrement('{{ entry.id }}')">-</button>
+		<input class="stepper_input" id="{{ entry.id }}" name="{{ entry.id }}" type="number" value="0" min="0">
+		<button type="button" class="stepper_button stepper_button_plus" onclick="increment('{{ entry.id }}')">+</button>
+	</div>
+{% endmacro %}
+
+{% macro build_switch(entry) %}
+	<label for="{{ entry.id }}">{{ entry.name }}</label>
+	<label class="switch">
+		<input id="{{ entry.id }}" name="{{ entry.id }}" type="checkbox">
+		<span class="slider round"></span>
+	</label>
+{% endmacro %}
+
+{% macro build_segmented(entry) %}
+
+{% endmacro %}
+
+<!-- content -->
+
+{% block title %}Scouting{% endblock %}
+
+{% block content %}
+	<form name="scouting" action="/submit" onsubmit="return validateForm()" method="post">
+		<div id="scouting_form">
+			{% for section in entries %}
+				<h3>{{ section }}</h3>
+				{% for entry in entries[section] %}
+					<p class="error" id="{{ entry.id }}_error"></p> <!-- to be used by form validation-->
+					{% if entry.type == "input" %}
+						{{ build_input(entry) }}
+					{% elif entry.type == "dropdown" %}
+						{{ build_dropdown(entry) }}
+					{% elif entry.type == "stepper" %}
+						{{ build_stepper(entry) }}
+					{% elif entry.type == "segmented" %}
+						{{ build_segmented(entry) }}
+					{% elif entry.type == "switch" %}
+						{{ build_switch(entry) }}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		</div>
+		<input type="submit" value="Submit" class="submit">
+	</form>
+
+<!-- Steppers
+Usage:
+	<button onclick="increment()">+</button>
+	<button onclick="decrement()">-</button>
+-->
+
+<script>
+	function increment(stepperId) {
+		console.log(stepperId);
+		document.getElementById(stepperId).stepUp();
+	}
+	function decrement(stepperId) {
+		document.getElementById(stepperId).stepDown();
+	}
+</script>
+
+<script>
+	function validateForm() {
+		const teamNumber = document.forms['scouting']['Team_Number'].value;
+		if (teamNumber == "" || isNan(teamNumber) || parseInt(teamNumber) < 0) {}
+	}
+</script>
+
+
+{% endblock %}
+
