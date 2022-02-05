@@ -4,7 +4,7 @@
 
 {% macro build_input(entry) %}
 	<label for="{{ entry.id }}">{{ entry.name }}</label>
-	<input type="{{ entry.options['type'] }}" id="{{ entry.id }}" name="{{ entry.id }}">
+	<input type="{{ entry.options['type'] }}" id="{{ entry.id }}" name="{{ entry.id }}" {% if entry.options['required'] %}required{% endif %} />
 {% endmacro %}
 
 {% macro build_dropdown(entry) %}
@@ -22,6 +22,7 @@
 
 {% macro build_switch(entry) %}
 	<label for="{{ entry.id }}">{{ entry.name }}</label>
+	<!-- NOTE: nothing is passed to POST if not checked -->
 	<label class="switch">
 		<input id="{{ entry.id }}" name="{{ entry.id }}" type="checkbox">
 		<span class="slider round"></span>
@@ -29,7 +30,63 @@
 {% endmacro %}
 
 {% macro build_segmented(entry) %}
+	<label>{{ entry.name }}</label>
+	<div id="{{ entry.id }}_segmented">
+		{% for i in range(entry.options['choices'] | length) %}
+		<input id="{{ entry.id }}_rad{{ i }}" type="radio" name="{{ entry.id }}" value="{{ entry.options.choices[i] }}" {% if i == 0 %}checked{% endif%}>
+		<label class="segmented_label" for="{{ entry.id }}_rad{{ i }}">{{ entry.options['choices'][i] }}</label>
+		{% endfor %}
+		<div id="{{ entry.id }}_segmented_background"></div>
+	</div>
 
+	<!-- css -->
+	<style>
+		/* TODO: Display vertically on small screens translateY() */
+		#{{ entry.id }}_segmented {
+			position: relative;
+			z-index: 5;
+			border: 1px solid var(--segmented-border);
+			border-radius: var(--segmented-radius);
+			display: inline-flex;
+		}
+		#{{ entry.id }}_segmented input {
+			display: none;
+		}
+		#{{ entry.id }}_segmented_background,
+		.segmented_label {
+			width: {{ entry.options['width'] }}px;
+			height: 30px;
+			text-align: center;
+			display: inline-block;
+		}
+		.segmented_label {
+			margin-bottom: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		#{{ entry.id }}_segmented_background {
+			background-color: var(--segmented-bg);
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			width: {{ entry.options['width'] }}px;
+
+		}
+		{% for i in range(entry.options['choices'] | length) %}
+		#{{ entry.id }}_rad{{ i }}:checked ~ #{{ entry.id }}_segmented_background {
+			transform: translateX({{ entry.options['width'] * i}}px);
+			transition: transform 0.5s ease-in-out;
+			{% if i == 0 %}
+			border-radius: 5px 0 0 5px;
+			{% endif %}
+			{% if i == (entry.options['choices'] | length) - 1 %}
+			border-radius: 0 5px 5px 0;
+			{% endif %}
+		}
+		{% endfor %}
+	</style>
 {% endmacro %}
 
 <!-- content -->

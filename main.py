@@ -5,11 +5,12 @@ from collections import namedtuple
 app = Flask(__name__)
 
 Entry = namedtuple('Entry', 'name id type options')
-
+# TODO: problems collapsible and add rows
 entries = {
     "Scouting": [
         Entry('Team Number', 'team_number', 'input', {
-            'type': 'text'
+            'type': 'number',
+            'required': True
         }),
     ],
     "Autonomous": [
@@ -22,15 +23,16 @@ entries = {
 
     ],
     "Endgame": [
-        # TODO: segmented
-        # Entry("Hang Level", 'hang_level', 'segmented', {
-        #     options: [
-        #         'Low',
-        #         'Medium',
-        #         'High',
-        #         'Traversal'
-        #     ]
-        # })
+        Entry("Hang Level", 'hang_level', 'segmented', {
+            'choices': [
+                'No Hang',
+                'Low',
+                'Mid',
+                'High',
+                'Traversal'
+            ],
+            'width': 120 # in pixels
+        }),
         Entry("Scoring Bonus", 'scoring_bonus', 'switch', None),
         Entry("Hanger Bonus", 'hanger_bonus', 'switch', None)
     ]

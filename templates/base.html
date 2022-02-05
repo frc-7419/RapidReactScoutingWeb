@@ -2,16 +2,22 @@
 <html>
 	<head>
 		<title>{% block title %}{% endblock %}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	</head>
 	<body>
 		<header>
 			<nav class="header">
-				<img width=40 src="{{ url_for('static', filename='images/7419_light.png') }}"
+				<img width=40 src="{{ url_for('static', filename='images/7419_light.png') }}">
+				<a id="darkmodetoggle" onclick="switchTheme()"></a>
 			</nav>
 		</header>
 		<section class="content">
 			{% block content %}{% endblock %}
 		</section>
+
+		<script src="{{ url_for('static', filename='js/darkmodetoggle.js') }}"></script>
+
 	</body>
 </html>
