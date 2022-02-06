@@ -1,0 +1,86 @@
+[
+	{
+		"name": "Scouting",
+		"entries": [
+			{
+				"name": "Team Number",
+				"id": "team_number",
+				"type": "input",
+				"options": {
+					"type": "number",
+					"required": true
+				}
+			}
+		],
+		"options": null
+	},
+	{
+		"name": "Autonomous",
+		"entries": [
+			{
+				"name": "Upper Hub Scored",
+				"id": "auton_upper",
+				"type": "stepper",
+				"options": null
+			},
+			{
+				"name": "Lower Hub Scored",
+				"id": "auton_lower",
+				"type": "stepper",
+				"options": null
+			}
+		],
+		"options": null
+	},
+	{
+		"name": "Tele-Op",
+		"entries": [
+			{
+				"name": "Upper Hub Scored",
+				"id": "teleop_upper",
+				"type": "stepper",
+				"options": null
+			},
+			{
+				"name": "Lower Hub Scored",
+				"id": "teleop_lower",
+				"type": "stepper",
+				"options": null
+			}
+		],
+		"options": null
+	},
+	{
+		"name": "Endgame",
+		"entries": [
+			{
+				"name": "Hang Level",
+				"id": "hang_level",
+				"type": "segmented",
+				"options": {
+					"choices": [
+						"No Hang",
+						"Low",
+						"Mid",
+						"High",
+						"Traversal"
+					],
+					"width": 120
+				}
+			},
+			{
+				"name": "Scoring Bonus",
+				"id": "scoring_bonus",
+				"type": "switch",
+				"options": null
+			},
+			{
+				"name": "Hanger Bonus",
+				"id": "hanger_bonus",
+				"type": "switch",
+				"options": null
+			}
+		],
+		"options": null
+	}
+]

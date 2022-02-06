@@ -55,7 +55,7 @@
 		#{{ entry.id }}_segmented_background,
 		.segmented_label {
 			width: {{ entry.options['width'] }}px;
-			height: 30px;
+			height: var(--segmented-height);
 			text-align: center;
 			display: inline-block;
 		}
@@ -79,10 +79,10 @@
 			transform: translateX({{ entry.options['width'] * i}}px);
 			transition: transform 0.5s ease-in-out;
 			{% if i == 0 %}
-			border-radius: 5px 0 0 5px;
+			border-radius: var(--segmented-radius) 0 0 var(--segmented-radius);
 			{% endif %}
 			{% if i == (entry.options['choices'] | length) - 1 %}
-			border-radius: 0 5px 5px 0;
+			border-radius: 0 var(--segmented-radius) var(--segmented-radius) 0;
 			{% endif %}
 		}
 		{% endfor %}
@@ -97,8 +97,8 @@
 	<form name="scouting" action="/submit" onsubmit="return validateForm()" method="post">
 		<div id="scouting_form">
 			{% for section in entries %}
-				<h3>{{ section }}</h3>
-				{% for entry in entries[section] %}
+				<h3>{{ section.name }}</h3>
+				{% for entry in section.entries %}
 					<p class="error" id="{{ entry.id }}_error"></p> <!-- to be used by form validation-->
 					{% if entry.type == "input" %}
 						{{ build_input(entry) }}

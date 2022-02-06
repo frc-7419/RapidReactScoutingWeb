@@ -11,8 +11,10 @@
 	--segmented-radius: 5px;
 	/* change these and for light mode */
 	--segmented-border: #444c56;
-	--segmented-bg: orange;
+	--segmented-bg: #444c56;
+	--segmented-height: 40px;
 }
+
 [data-theme="light"] {
 	--bg: #fefefe;
 	--fg: #444;
