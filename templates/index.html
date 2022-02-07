@@ -2,59 +2,68 @@
 
 <!-- macros -->
 
+{% macro show_label_if_enabled(entry) %}
+{% if entry['options']['hide_label'] != True %}<label for="{{ entry['id'] }}">{{ entry['name'] }}</label>{% endif %}
+{% endmacro %}
+
 {% macro build_input(entry) %}
-	<label for="{{ entry.id }}">{{ entry.name }}</label>
-	<input type="{{ entry.options['type'] }}" id="{{ entry.id }}" name="{{ entry.id }}" {% if entry.options['required'] %}required{% endif %} />
+	{{ show_label_if_enabled(entry) }}
+	<input type="{{ entry['options']['type'] }}" id="{{ entry['id'] }}" name="{{ entry['id'] }}" {% if entry['options']['placeholder'] %}placeholder="{{ entry['options']['placeholder'] }}"{% endif %}{% if entry['options']['required'] %}required{% endif %} />
 {% endmacro %}
 
 {% macro build_dropdown(entry) %}
-	<p>{{ entry.name }}</p>
+	{{ show_label_if_enabled(entry) }}
+	<select name="{{ entry['id'] }}">
+		{% for choice in entry['choices'] %}
+		<option value="{{ choice }}">{{ choice }}</option>
+		{% endfor %}
+	</select>
 {% endmacro %}
 
 {% macro build_stepper(entry) %}
-	<label for="{{ entry.id }}">{{ entry.name }}</label>
+	{{ show_label_if_enabled(entry) }}
 	<div class="stepper_container">
-		<button type="button" class="stepper_button stepper_button_minus" onclick="decrement('{{ entry.id }}')">-</button>
-		<input class="stepper_input" id="{{ entry.id }}" name="{{ entry.id }}" type="number" value="0" min="0">
-		<button type="button" class="stepper_button stepper_button_plus" onclick="increment('{{ entry.id }}')">+</button>
+		<button type="button" class="stepper_button stepper_button_minus" onclick="decrement('{{ entry['id'] }}')">-</button>
+		<input class="stepper_input" id="{{ entry['id'] }}" name="{{ entry['id'] }}" type="number" value="0" min="0">
+		<button type="button" class="stepper_button stepper_button_plus" onclick="increment('{{ entry['id'] }}')">+</button>
 	</div>
 {% endmacro %}
 
 {% macro build_switch(entry) %}
-	<label for="{{ entry.id }}">{{ entry.name }}</label>
+	{{ show_label_if_enabled(entry) }}
 	<!-- NOTE: nothing is passed to POST if not checked -->
 	<label class="switch">
-		<input id="{{ entry.id }}" name="{{ entry.id }}" type="checkbox">
+		<input id="{{ entry['id'] }}" name="{{ entry['id'] }}" value="on" type="checkbox" />
 		<span class="slider round"></span>
 	</label>
 {% endmacro %}
 
 {% macro build_segmented(entry) %}
-	<label>{{ entry.name }}</label>
-	<div id="{{ entry.id }}_segmented">
-		{% for i in range(entry.options['choices'] | length) %}
-		<input id="{{ entry.id }}_rad{{ i }}" type="radio" name="{{ entry.id }}" value="{{ entry.options.choices[i] }}" {% if i == 0 %}checked{% endif%}>
-		<label class="segmented_label" for="{{ entry.id }}_rad{{ i }}">{{ entry.options['choices'][i] }}</label>
+	{{ show_label_if_enabled(entry) }}
+	<div id="{{ entry['id'] }}_segmented">
+		{% for i in range(entry['options']['choices'] | length) %}
+		<input id="{{ entry['id'] }}_rad{{ i }}" type="radio" name="{{ entry['id'] }}" value="{{ entry['options'].choices[i] }}" {% if i == 0 %}checked{% endif%}>
+		<label class="segmented_label" for="{{ entry['id'] }}_rad{{ i }}">{{ entry['options']['choices'][i] }}</label>
 		{% endfor %}
-		<div id="{{ entry.id }}_segmented_background"></div>
+		<div id="{{ entry['id'] }}_segmented_background"></div>
 	</div>
 
 	<!-- css -->
 	<style>
 		/* TODO: Display vertically on small screens translateY() */
-		#{{ entry.id }}_segmented {
+		#{{ entry['id'] }}_segmented {
 			position: relative;
 			z-index: 5;
 			border: 1px solid var(--segmented-border);
 			border-radius: var(--segmented-radius);
 			display: inline-flex;
 		}
-		#{{ entry.id }}_segmented input {
+		#{{ entry['id'] }}_segmented input {
 			display: none;
 		}
-		#{{ entry.id }}_segmented_background,
+		#{{ entry['id'] }}_segmented_background,
 		.segmented_label {
-			width: {{ entry.options['width'] }}px;
+			width: {{ entry['options']['width'] }}px;
 			height: var(--segmented-height);
 			text-align: center;
 			display: inline-block;
@@ -65,23 +74,23 @@
 			align-items: center;
 			justify-content: center;
 		}
-		#{{ entry.id }}_segmented_background {
+		#{{ entry['id'] }}_segmented_background {
 			background-color: var(--segmented-bg);
 			position: absolute;
 			top: 0;
 			left: 0;
 			z-index: -1;
-			width: {{ entry.options['width'] }}px;
+			width: {{ entry['options']['width'] }}px;
 
 		}
-		{% for i in range(entry.options['choices'] | length) %}
-		#{{ entry.id }}_rad{{ i }}:checked ~ #{{ entry.id }}_segmented_background {
-			transform: translateX({{ entry.options['width'] * i}}px);
+		{% for i in range(entry['options']['choices'] | length) %}
+		#{{ entry['id'] }}_rad{{ i }}:checked ~ #{{ entry['id'] }}_segmented_background {
+			transform: translateX({{ entry['options']['width'] * i}}px);
 			transition: transform 0.5s ease-in-out;
 			{% if i == 0 %}
 			border-radius: var(--segmented-radius) 0 0 var(--segmented-radius);
 			{% endif %}
-			{% if i == (entry.options['choices'] | length) - 1 %}
+			{% if i == (entry['options']['choices'] | length) - 1 %}
 			border-radius: 0 var(--segmented-radius) var(--segmented-radius) 0;
 			{% endif %}
 		}
@@ -89,28 +98,66 @@
 	</style>
 {% endmacro %}
 
+{% macro build_table(entry) %}
+	{{ show_label_if_enabled(entry) }}
+	<table id="{{ entry['id'] }}">
+		{% if not entry['options']['hide_header'] %}
+		<tr>
+			{% for column in entry['options']['columns'] %}
+			<th>{{ column['name'] }}</th>
+			{% endfor %}
+		</tr>
+		{% endif %}
+		{% for i in range(entry['options']['rows']) %}
+		<tr>
+			{% for column in entry['options']['columns'] %}
+			<td>{{ build_by_type(column | set_dict_attr( ('id',  column['id'] + '[]'), )) }}</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+		{% if entry['options']['appendable'] %}
+		<tr>
+			<td>
+				<button type="button" class="plus-button" onclick="addRow('{{ entry['id'] }}', window.{{ entry['id'] }}_columns)"></button>
+			</td>
+		</tr>
+		{% endif %}
+	</table>
+
+	{% if entry['options']['appendable'] %}
+	<script>window.{{ entry['id']}}_rows = {{ entry['options']['rows'] }}</script>
+	<script>window.{{ entry['id'] }}_columns = [ {% for column in entry['options']['columns'] %} '<td>{{ build_by_type(column | set_dict_attr( ('id',  column['id'] + '[]'), )) | replace('\n', '') }}</td>', {% endfor %}]</script>
+	{% endif %}
+{% endmacro %}
+
+{% macro build_by_type(entry) %}
+	{% if entry['type'] == "input" %}
+		{{ build_input(entry) }}
+	{% elif entry['type'] == "dropdown" %}
+		{{ build_dropdown(entry) }}
+	{% elif entry['type'] == "stepper" %}
+		{{ build_stepper(entry) }}
+	{% elif entry['type'] == "segmented" %}
+		{{ build_segmented(entry) }}
+	{% elif entry['type'] == "switch" %}
+		{{ build_switch(entry) }}
+	{% elif entry['type'] == "table" %}
+		{{ build_table(entry) }}
+	{% endif %}
+{% endmacro %}
+
 <!-- content -->
 
 {% block title %}Scouting{% endblock %}
 
 {% block content %}
-	<form name="scouting" action="/submit" onsubmit="return validateForm()" method="post">
-		<div id="scouting_form">
+	<form name="scouting" id="scouting" action="/submit" method="post">
+		<div>
 			{% for section in entries %}
-				<h3>{{ section.name }}</h3>
-				{% for entry in section.entries %}
-					<p class="error" id="{{ entry.id }}_error"></p> <!-- to be used by form validation-->
-					{% if entry.type == "input" %}
-						{{ build_input(entry) }}
-					{% elif entry.type == "dropdown" %}
-						{{ build_dropdown(entry) }}
-					{% elif entry.type == "stepper" %}
-						{{ build_stepper(entry) }}
-					{% elif entry.type == "segmented" %}
-						{{ build_segmented(entry) }}
-					{% elif entry.type == "switch" %}
-						{{ build_switch(entry) }}
-					{% endif %}
+				<h3>{{ section['name'] }}</h3>
+				{% for entry in section['entries'] %}
+					<p class="error" id="{{ entry['id'] }}_error"></p> <!-- to be used by form validation-->
+					{{ build_by_type(entry) }}
 				{% endfor %}
 			{% endfor %}
 		</div>
@@ -134,10 +181,30 @@ Usage:
 </script>
 
 <script>
-	function validateForm() {
-		const teamNumber = document.forms['scouting']['Team_Number'].value;
-		if (teamNumber == "" || isNan(teamNumber) || parseInt(teamNumber) < 0) {}
+	function addRow(tableId, columns) {
+		const table = document.getElementById(tableId);
+		const row = table.insertRow(window[tableId + "_rows"]++)
+		for (let i = 0; i < columns.length; i++) {
+			const cell = row.insertCell(i);
+			cell.innerHTML = columns[i];
+		}
 	}
+</script>
+
+<script>
+	// if not checked submit off
+	// without this there would be nothing submitted if not checked
+	document.getElementById('scouting').onsubmit = function() {
+		document.querySelectorAll('input[type=checkbox]:not(:checked)').forEach((e) =>{
+			e.value = 'off';
+			e.checked = true;
+		})
+	}
+	// not needed
+	// function validateForm() {
+	// 	const teamNumber = document.forms['scouting']['Team_Number'].value;
+	// 	if (teamNumber == "" || isNan(teamNumber) || parseInt(teamNumber) < 0) {}
+	// }
 </script>
 
 

@@ -82,5 +82,54 @@
 			}
 		],
 		"options": null
+	},
+	{
+		"name": "Problems",
+		"entries": [
+			{
+				"name": "Problems",
+				"id": "problems",
+				"type": "table",
+				"options": {
+					"rows": 1,
+					"hide_label": true,
+					"hide_header": true,
+					"columns": [
+						{
+							"name": "Problem",
+							"type": "input",
+							"id": "problem_name",
+							"options": {
+								"hide_label": true,
+								"placeholder": "Problem",
+								"type": "text"
+							}
+						},
+						{
+							"name": "Game Section",
+							"type": "dropdown",
+							"id": "problem_game_section",
+							"choices": [
+								"Autonomous",
+								"Tele-Op",
+								"Endgame"
+							],
+							"options": {
+								"hide_label": true
+							}
+						},
+						{
+							"name": "Problem Toggle",
+							"type": "switch",
+							"id": "problem_toggle",
+							"options": {
+								"hide_label": true
+							}
+						}
+					],
+					"appendable": true
+				}
+			}
+		]
 	}
 ]

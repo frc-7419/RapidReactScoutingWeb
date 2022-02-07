@@ -11,15 +11,9 @@ Section = namedtuple("Section", 'name entries options')
 Entry = namedtuple('Entry', 'name id type options')
 
 def load_entries(file):
-    parsed = []
     with open(file, 'r') as f:
         data = json.loads(f.read())
-        for section in data:
-            parsed_entries = []
-            for entry in section['entries']:
-                parsed_entries.append(Entry(entry['name'], entry['id'], entry['type'], entry['options']))
-            parsed.append(Section(section['name'], parsed_entries, section['options']))
-    return parsed
+    return data
 
 entries = load_entries(ENTRY_FILE)
 # TODO: problems collapsible and add rows
@@ -31,11 +25,36 @@ def index():
 
 @app.route("/submit", methods=['POST'])
 def submit():
+    form = request.form
+    submission = {}
+    for k in ['team_number', 'auton_upper', 'auton_lower', 'teleop_upper', 'teleop_lower', 'hang_level', 'scoring_bonus', 'hanger_bonus']:
+        if form[k] in ['on', 'off']:
+            value = True if form[k] == 'on' else False
+        else:
+            value = form[k]
+        submission[k] = value
+
+    # parse problems
+    submission['problems'] = []
+    names = form.getlist('problem_name[]')
+    sections = form.getlist('problem_game_section[]')
+    toggles = form.getlist('problem_toggle[]')
+    for name, section, toggle in zip(names, sections, toggles):
+        toggle = True if toggle == 'on' else False
+        submission['problems'].append((name, section,toggle))
+
+    print(submission)
     # redirect
-    print(request.form)
     # TODO: google sheets integration
     return 'hi'
 
+@app.template_filter('set_dict_attr')
+def set_dict_attr(inp, *args):
+    out = inp.copy() # copy, we don't want pass by ref
+    for arg in args:
+        key, val = arg
+        out[key] = val
+    return out
 
 if __name__ == "__main__":
     app.run()
