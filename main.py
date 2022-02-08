@@ -51,7 +51,7 @@ def submit():
     sheet.append_row(tuple(str(d) for d in submission.values()))
     # redirect
     # TODO: google sheets integration
-    return 'hi'
+    return render_template("submitted.html")
 
 @app.template_filter('set_dict_attr')
 def set_dict_attr(inp, *args):
