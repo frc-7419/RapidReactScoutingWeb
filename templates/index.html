@@ -58,6 +58,11 @@
 			border-radius: var(--segmented-radius);
 			display: inline-flex;
 		}
+		@media screen and (max-width: 630px) {
+			#{{ entry['id'] }}_segmented {
+				flex-direction: column;
+			}
+		}
 		#{{ entry['id'] }}_segmented input {
 			display: none;
 		}
@@ -93,6 +98,11 @@
 			{% if i == (entry['options']['choices'] | length) - 1 %}
 			border-radius: 0 var(--segmented-radius) var(--segmented-radius) 0;
 			{% endif %}
+		}
+		@media screen and (max-width: 630px) {
+			#{{ entry['id'] }}_rad{{ i }}:checked ~ #{{ entry['id'] }}_segmented_background {
+				transform: translateY({{ 40 * i }}px) !important;
+			}
 		}
 		{% endfor %}
 	</style>
