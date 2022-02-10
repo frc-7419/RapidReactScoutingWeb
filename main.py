@@ -2,6 +2,10 @@
 from flask import Flask, render_template, request
 from collections import namedtuple
 import json
+from sheets import Sheets
+
+sheet = Sheets("credentials.json", "scouting-test")
+sheet.init_sheet()
 
 app = Flask(__name__)
 
@@ -43,10 +47,11 @@ def submit():
         toggle = True if toggle == 'on' else False
         submission['problems'].append((name, section,toggle))
 
-    print(submission)
+    print(tuple(str(d) for d in submission.values()))
+    sheet.append_row(tuple(str(d) for d in submission.values()))
     # redirect
     # TODO: google sheets integration
-    return 'hi'
+    return render_template("submitted.html")
 
 @app.template_filter('set_dict_attr')
 def set_dict_attr(inp, *args):

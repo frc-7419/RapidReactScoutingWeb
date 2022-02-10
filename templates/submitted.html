@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Submitted{% endblock %}
+
+{% block content %}
+<style>
+    .center {
+		text-align: center;
+    }
+	img {
+		max-width: 100%;
+		border-radius: 5px;
+	}
+</style>
+
+<div>
+    <p class="center">Your response has been recorded</p>
+	<p class="center"><a href="{{ url_for('index') }}">Submit Another</a></p>
+	<img src="{{ url_for('static', filename='images/funny.jpg') }}" />
+</div>
+{% endblock %}
