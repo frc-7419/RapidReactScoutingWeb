@@ -1,6 +1,6 @@
 import gspread
 
-class Sheets(object):
+class Sheet(object):
     def __init__(self, credentials, sheetname):
         self._credentials = credentials
         self._account = gspread.service_account(filename=credentials)
@@ -13,3 +13,9 @@ class Sheets(object):
 
     def append_row(self, row: tuple):
         self.sheet.append_row(row)
+
+    def append_to_next_empty_row(self, row:list):
+        str_list = list(filter(None, self.sheet.col_values(1)))
+        next_empty_row = str(len(str_list)+1)
+        print(next_empty_row)
+        self.sheet.append_row(row, table_range=f'A{next_empty_row}')

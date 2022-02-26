@@ -18,6 +18,12 @@
 		"name": "Autonomous",
 		"entries": [
 			{
+				"name": "Moves off Tarmac",
+				"id": "auton_tarmac",
+				"type": "switch",
+				"options": null
+			},
+			{
 				"name": "Upper Hub Scored",
 				"id": "auton_upper",
 				"type": "stepper",
@@ -53,6 +59,18 @@
 	{
 		"name": "Endgame",
 		"entries": [
+			{
+				"name": "Upper Hub Scored",
+				"id": "endgame_upper",
+				"type": "stepper",
+				"options": null
+			},
+			{
+				"name": "Lower Hub Scored",
+				"id": "endgame_lower",
+				"type": "stepper",
+				"options": null
+			},
 			{
 				"name": "Hang Level",
 				"id": "hang_level",
@@ -114,14 +132,6 @@
 								"Tele-Op",
 								"Endgame"
 							],
-							"options": {
-								"hide_label": true
-							}
-						},
-						{
-							"name": "Problem Toggle",
-							"type": "switch",
-							"id": "problem_toggle",
 							"options": {
 								"hide_label": true
 							}
