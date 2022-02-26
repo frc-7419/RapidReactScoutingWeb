@@ -3,8 +3,17 @@ from flask import Flask, render_template, request
 from collections import namedtuple
 import json
 from sheets import Sheet
+import os
 
-sheet = Sheet("credentials.json", "Scouting Data")
+if os.path.exists("credentials.json"):
+    with open("credentials.json", 'r') as f:
+        credentials = json.loads(f.read())
+else: # load from env vars
+    credentials = {}
+    for key in ["type", "project_id", "private_key_id", "private_key", "client_email", "client_id", "auth_uri", "token_uri", "auth_provider_x509_cert_url", "client_x509_cert_url"]:
+        credentials[key] = os.getenv(key)
+
+sheet = Sheet(credentials, "Scouting Data")
 # sheet.init_sheet()
 
 app = Flask(__name__)

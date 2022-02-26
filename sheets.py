@@ -3,7 +3,7 @@ import gspread
 class Sheet(object):
     def __init__(self, credentials, sheetname):
         self._credentials = credentials
-        self._account = gspread.service_account(filename=credentials)
+        self._account = gspread.service_account_from_dict(credentials)
         self.sheet = self._account.open(sheetname).sheet1
     
     def init_sheet(self):
