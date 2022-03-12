@@ -65,6 +65,7 @@ def submit():
     sections = form.getlist('problem_game_section[]')
     # maximum is 8, change if you want
     for name, section in list(zip(names, sections))[:8]:
+        if name == "": continue
         submission['problems'].append(name)
         submission['problems'].append(section)
 
