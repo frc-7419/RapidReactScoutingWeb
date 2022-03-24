@@ -15,7 +15,11 @@ else: # load from env vars
 
 sheet = Sheet(credentials, "Scouting Data")
 # sheet.init_sheet()
-
+Level_to_points = {"No Hang": 0,
+						"Low": 4,
+						"Mid": 6,
+						"High": 10,
+						"Traversal":15}
 app = Flask(__name__)
 
 ENTRY_FILE = "config/RapidReact.json"
@@ -50,7 +54,7 @@ def submit():
             if k == 'teleop_total':
                 submission[k] = int(submission['teleop_upper'])*2 + int(submission['teleop_lower'])
             if k == 'endgame_total':
-                submission[k] = 'not implemented yet: https://github.com/frc-7419/RapidReactScoutingWeb' # TODO
+                submission[k] = Level_to_points[submission["hang_level"]] + int(submission['endgame_upper'])*2 + int(submission['endgame_lower'])
             continue
 
         if form[k] in ['on', 'off']:
