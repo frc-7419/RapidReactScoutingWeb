@@ -35,8 +35,6 @@ def load_entries(file):
 
 
 entries = load_entries(ENTRY_FILE)
-# TODO: problems collapsible and add rows
-
 
 @app.route("/")
 def index():
@@ -69,8 +67,6 @@ def submit():
             to_submit.append(submission[k])
     print(to_submit)
     sheet.append_to_next_empty_row(to_submit)
-    # redirect
-    # TODO: google sheets integration
     return render_template("submitted.html")
 
 
