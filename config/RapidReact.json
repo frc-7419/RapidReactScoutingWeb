@@ -10,6 +10,14 @@
 					"type": "number",
 					"required": true
 				}
+			},
+			{
+				"name": "Scouter Name",
+				"id": "scouter_name",
+				"type": "input",
+				"options": {
+					"required": true
+				}
 			}
 		],
 		"options": null
@@ -97,48 +105,38 @@
 				"id": "hanger_bonus",
 				"type": "switch",
 				"options": null
+			},
+			{
+				"name": "Hang Time",
+				"id": "hang_time",
+				"type": "input",
+				"options": {
+					"type": "number"
+				}
 			}
 		],
 		"options": null
 	},
 	{
-		"name": "Problems",
+		"name": "Comments",
 		"entries": [
 			{
-				"name": "Problems",
-				"id": "problems",
-				"type": "table",
-				"options": {
-					"rows": 1,
-					"hide_label": true,
-					"hide_header": true,
-					"columns": [
-						{
-							"name": "Problem",
-							"type": "input",
-							"id": "problem_name",
-							"options": {
-								"hide_label": true,
-								"placeholder": "Problem",
-								"type": "text"
-							}
-						},
-						{
-							"name": "Game Section",
-							"type": "dropdown",
-							"id": "problem_game_section",
-							"choices": [
-								"Autonomous",
-								"Tele-Op",
-								"Endgame"
-							],
-							"options": {
-								"hide_label": true
-							}
-						}
-					],
-					"appendable": true
-				}
+				"name": "Auton",
+				"type": "input",
+				"id": "auton_comments",
+				"options": null
+			},
+			{
+				"name": "TeleOp",
+				"type": "input",
+				"id": "teleop_comments",
+				"options": null
+			},
+			{
+				"name": "Endgame",
+				"type": "input",
+				"id": "endgame_comments",
+				"options": null
 			}
 		]
 	}

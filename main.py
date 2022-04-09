@@ -46,8 +46,8 @@ def index():
 @app.route("/submit", methods=['POST'])
 def submit():
     form = request.form
-    submission = {}
-    for k in ['team_number', 'auton_tarmac', 'auton_upper', 'auton_lower', 'auton_total', 'teleop_lower', 'teleop_upper', 'teleop_total', 'endgame_lower', 'endgame_upper', 'hang_level', 'scoring_bonus', 'hanger_bonus', 'endgame_total']:
+    submission = {} 
+    for k in ['team_number', 'scouter_name', 'auton_tarmac', 'auton_upper', 'auton_lower', 'auton_total', 'teleop_lower', 'teleop_upper', 'teleop_total', 'endgame_lower', 'endgame_upper', 'hang_level', 'scoring_bonus', 'hanger_bonus', 'endgame_total', 'hang_time', 'auton_comments', 'teleop_comments', 'endgame_comments']:
         if k.endswith("_total"):
             if k == 'auton_total':
                 submission[k] = int(submission['auton_upper'])*4 + int(submission['auton_lower'])*2 + (2 if submission['auton_tarmac'] else 0)
@@ -63,24 +63,9 @@ def submit():
             value = form[k]
         submission[k] = value
 
-    # parse problems
-    submission['problems'] = []
-    names = form.getlist('problem_name[]')
-    sections = form.getlist('problem_game_section[]')
-    # maximum is 8, change if you want
-    for name, section in list(zip(names, sections))[:8]:
-        if name == "": continue
-        submission['problems'].append(name)
-        submission['problems'].append(section)
-
     print(tuple(str(d) for d in submission.values()))
     to_submit = []
-    for k in ['team_number', 'auton_tarmac', 'auton_lower', 'auton_upper', 'auton_total', 'teleop_lower', 'teleop_upper', 'teleop_total', 'endgame_lower', 'endgame_upper', 'hang_level', 'scoring_bonus', 'hanger_bonus', 'endgame_total', 'problems']:
-        if k == 'problems':
-            # unwrap
-            for p in submission['problems']:
-                to_submit.append(p)
-        else:
+    for k in ['team_number', 'scouter_name', 'auton_tarmac', 'auton_upper', 'auton_lower', 'auton_total', 'teleop_lower', 'teleop_upper', 'teleop_total', 'endgame_lower', 'endgame_upper', 'hang_level', 'scoring_bonus', 'hanger_bonus', 'endgame_total', 'hang_time', 'auton_comments', 'teleop_comments', 'endgame_comments']:
             to_submit.append(submission[k])
     print(to_submit)
     sheet.append_to_next_empty_row(to_submit)
