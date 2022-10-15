@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import json
 import subprocess
@@ -11,4 +12,4 @@ with open("credentials.json", 'r') as f:
     credentials = json.loads(f.read())
 
 for key in credentials:
-    subprocess.run(["heroku", "config:set", f"{key}='{credentials[key]}'"])
+    subprocess.run(["heroku", "config:set", f"{key}={credentials[key]}"])
